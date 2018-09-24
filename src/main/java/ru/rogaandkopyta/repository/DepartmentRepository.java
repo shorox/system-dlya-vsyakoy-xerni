@@ -9,7 +9,4 @@ import ru.rogaandkopyta.model.Department;
 
 @RepositoryRestResource(collectionResourceRel = "department", path = "department")
 public interface DepartmentRepository extends PagingAndSortingRepository<Department, Long> {
-
-    List<Department> findByName(@Param("name") String name);
-
 }

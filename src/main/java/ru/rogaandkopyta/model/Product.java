@@ -3,7 +3,7 @@ package ru.rogaandkopyta.model;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "rk_product")
 public class Product {
 
     @Id
