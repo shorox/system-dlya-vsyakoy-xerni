@@ -1,5 +1,7 @@
 package ru.rogaandkopyta.model;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -11,7 +13,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NaturalId
+    @Column(name = "name", unique = true)
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "PRODUCT_ID_FK"))
+    private Product product;
 
     private Date startDate;
     private Date endDate;
@@ -35,6 +43,14 @@ public class Order {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Date getStartDate() {
