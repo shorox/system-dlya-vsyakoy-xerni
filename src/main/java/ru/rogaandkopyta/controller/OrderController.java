@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.rogaandkopyta.model.Order;
 import ru.rogaandkopyta.repository.OrderRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -27,6 +28,7 @@ public class OrderController {
 
     @PostMapping
     public Order create(@RequestBody Order order){
+        order.setCreatedDate(LocalDateTime.now());
         return orderRepository.save(order);
     }
 
