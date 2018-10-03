@@ -1,5 +1,6 @@
 package ru.rogaandkopyta.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.rogaandkopyta.model.Department;
@@ -7,6 +8,7 @@ import ru.rogaandkopyta.model.Product;
 import ru.rogaandkopyta.repository.DepartmentRepository;
 import ru.rogaandkopyta.repository.ProductRepository;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,54 +18,29 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
-
     @GetMapping
-    public @ResponseBody Iterable<Product> getAllProducts(){
-        return productRepository.findAll();
+    public List<Product> getAllProducts(){
+        return (List<Product>) productRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public Product getEmployee(@PathVariable Long id){
-        return productRepository.findById(id).get();
+    public Product getEmployee(@PathVariable("id") Product product){
+        return product;
     }
 
     @PostMapping
-    public Product create(@RequestBody Map<String, String> body){
-        Department department = departmentRepository.findById(Long.parseLong(body.get("department_id"))).get();
-
-        Product product = new Product();
-        product.setName(body.get("name"));
-        product.setDepartment(department);
-
-        productRepository.save(product);
-
-        return product;
+    public Product create(@RequestBody Product product){
+        return productRepository.save(product);
     }
 
     @PutMapping("{id}")
-    public Product update(@PathVariable Long id, @RequestBody Map<String, String> body){
-        Product product = getEmployee(id);
-        for(Map.Entry<String, String> entry : body.entrySet()){
-            switch (entry.getKey()){
-                case "name" :
-                    product.setName(entry.getValue());
-                    break;
-                case "department_id" :
-                    Department department = departmentRepository.findById(Long.parseLong(body.get("department_id"))).get();
-                    product.setDepartment(department);
-                    break;
-            }
-        }
-
-        productRepository.save(product);
-
-        return product;
+    public Product update(@PathVariable("id") Product productFromDb, @RequestBody Product product){
+        BeanUtils.copyProperties(product, productFromDb, "id");
+        return productRepository.save(productFromDb);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id){
-        productRepository.deleteById(id);
+    public void delete(@PathVariable("id") Product product){
+        productRepository.delete(product);
     }
 }

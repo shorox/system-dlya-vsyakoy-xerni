@@ -1,8 +1,6 @@
 package ru.rogaandkopyta.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "rk_employee")
@@ -18,9 +16,6 @@ public class Employee {
 
     @ManyToOne
     private Department department;
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders = new ArrayList<>();
 
     public Employee() {
     }
@@ -59,24 +54,6 @@ public class Employee {
 
     public void setDepartment(Department department) {
         this.department = department;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public void addOrder(Order order) {
-        orders.add(order);
-        order.setEmployee(this);
-    }
-
-    public void removeOrder(Order order) {
-        orders.remove(order);
-        order.setEmployee(null);
     }
 
     @Override

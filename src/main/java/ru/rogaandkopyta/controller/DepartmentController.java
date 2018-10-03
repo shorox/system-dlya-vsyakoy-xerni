@@ -1,9 +1,12 @@
 package ru.rogaandkopyta.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.rogaandkopyta.model.Department;
 import ru.rogaandkopyta.repository.DepartmentRepository;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/department")
@@ -18,37 +21,28 @@ public class DepartmentController {
     private DepartmentRepository departmentRepository;
 
     @GetMapping
-    public @ResponseBody Iterable<Department> getAllDepartments(){
-        return departmentRepository.findAll();
+    public List<Department> getAllDepartments(){
+        return (List<Department>) departmentRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public Department getDepartment(@PathVariable Long id){
-        return departmentRepository.findById(id).get();
+    public Department getDepartment(@PathVariable("id") Department department){
+        return department;
     }
 
     @PostMapping
-    public Department create(@RequestBody String name){
-        Department department = new Department();
-        department.setName(name);
-
-        departmentRepository.save(department);
-
-        return department;
+    public Department create(@RequestBody Department department){
+        return departmentRepository.save(department);
     }
 
     @PutMapping("{id}")
-    public Department update(@PathVariable Long id, @RequestBody String name){
-        Department department = getDepartment(id);
-        department.setName(name);
-
-        departmentRepository.save(department);
-
-        return department;
+    public Department update(@PathVariable("id") Department departmentFromDb, @RequestBody Department department){
+        BeanUtils.copyProperties(department, departmentFromDb, "id");
+        return departmentRepository.save(departmentFromDb);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id){
-        departmentRepository.deleteById(id);
+    public void delete(@PathVariable("id") Department department){
+        departmentRepository.delete(department);
     }
 }

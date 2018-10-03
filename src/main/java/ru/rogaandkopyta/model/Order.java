@@ -21,7 +21,9 @@ public class Order {
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "PRODUCT_ID_FK"))
     private Product product;
 
-    private Date startDate;
+    @Column(updatable = false)
+    private Date createdDate;
+
     private Date endDate;
 
     @ManyToOne
@@ -53,12 +55,12 @@ public class Order {
         this.product = product;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Date getEndDate() {
@@ -95,12 +97,12 @@ public class Order {
         }
         Order order = (Order) o;
         return Objects.equals(name, order.name) &&
-                Objects.equals(startDate, order.startDate) &&
+                Objects.equals(createdDate, order.createdDate) &&
                 Objects.equals(endDate, order.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, startDate, endDate);
+        return Objects.hash(name, createdDate, endDate);
     }
 }
